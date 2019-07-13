@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Quickstart</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Options" href="options.html" />
+  <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">trcls</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#trcls">Contents</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="installation.html" class="reference internal ">Installation</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Quickstart</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#sam-alignment-file" class="reference internal">SAM Alignment File</a></li>
+                
+                  <li class="toctree-l2"><a href="#obtaining-a-gtf-annotation-file" class="reference internal">Obtaining a GTF Annotation File</a></li>
+                
+                  <li class="toctree-l2"><a href="#output" class="reference internal">Output</a></li>
+                
+                  <li class="toctree-l2"><a href="#annotations" class="reference internal">Annotations</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="options.html" class="reference internal ">Options</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="support.html" class="reference internal ">Support</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="poster.html" class="reference internal ">Poster</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Quickstart</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="installation.html"
+       title="previous chapter">← Installation</a>
+  </li>
+  <li class="next">
+    <a href="options.html"
+       title="next chapter">Options →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sam-alignment-file">
+<h2>SAM Alignment File<a class="headerlink" href="#sam-alignment-file" title="Permalink to this headline">¶</a></h2>
+<p><em>trcls</em> requires a pre-aligned SAM file. The program has been used
+successfully with <em>bowtie2</em> and <em>HISAT2</em> aligned files. SAM alignment files
+from other sequence alignment programs may not work if they represent alignments
+(particularly, the CIGAR and MD fields) differently from bowtie2 or
+HISAT2.</p>
+<p>The SAM alignment file should be trimmed to the region of interest. This is most
+commonly performed with <em>samtools</em>. If you intend to use the annotated SAM
+alignment file downstream, which is almost always the case, be sure to include
+the headers with the <code class="docutils literal notranslate"><span class="pre">-h</span></code> option.</p>
+<p>For example, to extract the alignments mapping to FLNA to a file flna.sam
+from the pre-aligned file pre-aligned.bam.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>samtools view -h pre-aligned.bam -o flna.sam chrX:154348524-154374638
+</pre></div>
+</div>
+</div>
+<div class="section" id="obtaining-a-gtf-annotation-file">
+<h2>Obtaining a GTF Annotation File<a class="headerlink" href="#obtaining-a-gtf-annotation-file" title="Permalink to this headline">¶</a></h2>
+<p>trcls additionally requires a GTF annotation file of known transcripts from
+the region of interest. Most typically, these annotations originate from a
+single gene. There are some requirements that must be met with regard to the
+contents of this file.</p>
+<ol class="arabic simple">
+<li><p>There must be feature lines with a <em>feature</em> field of value <em>‘exon’</em>. These
+are, in fact, the only feature lines which trcls reads.</p></li>
+<li><p>Each feature line with feature field of value ‘exon’ must have an
+<em>attribute</em> field with tag-value pair with tag <em>‘transcript_id’</em> and value
+corresponding to a unique identifier (usually the accession number)
+corresponding to the transcript with which this exon belongs.</p></li>
+</ol>
+<p>For examples of valid GTF files, please see the file <a class="reference external" href="https://github.com/ningyuansg/trcls/blob/master/test/FLNA.gtf">FLNA.gtf</a> from the
+project repository. These files can be generated from the <a class="reference external" href="https://genome.ucsc.edu/cgi-bin/hgTables">UCSC Table Browser</a>.
+For GTF file specifications, please refer to <a class="reference external" href="https://ensembl.org/info/website/upload/gff.html">this page</a>.</p>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<p>The annotated SAM alignment is output via <em>stdout</em>. Log messages are sent to
+<em>stderr</em>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 trcls flna.sam flna.gtf &gt; flna-annotated.sam <span class="m">2</span>&gt; flna.log
+</pre></div>
+</div>
+</div>
+<div class="section" id="annotations">
+<h2>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h2>
+<p>Annotations are added to each alignment via an optional field tagged <code class="docutils literal notranslate"><span class="pre">TR</span></code> of
+type string, i.e. <code class="docutils literal notranslate"><span class="pre">TR:Z</span></code>. If an alignment fails to annotate, the value for
+this field is set as a single asterisk character (<code class="docutils literal notranslate"><span class="pre">*</span></code>); otherwise, it is a
+comma separated string of possible transcripts which this sequence read may have
+originated from. Possible pre-mRNA is always represented by value <em>‘pre-mRNA’</em>.</p>
+<p>For example:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tag</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TR:Z:*</span></code></p></td>
+<td><p>No annotation information available.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TR:Z:pre-mRNA</span></code></p></td>
+<td><p>Originates from pre-mRNA only.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TR:Z:NM_001456</span></code></p></td>
+<td><p>Originates from NM_001456 only.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TR:Z:NM_001110556,pre-mRNA</span></code></p></td>
+<td><p>Originates from either pre-mRNA,
+or NM_0001110556.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="installation.html"
+       title="previous chapter">← Installation</a>
+  </li>
+  <li class="next">
+    <a href="options.html"
+       title="next chapter">Options →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright .
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

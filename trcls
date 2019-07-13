@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+    THIS_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$THIS_DIR/$SOURCE"
+done
+THIS_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+python3 "${THIS_DIR}/src" "$@"
